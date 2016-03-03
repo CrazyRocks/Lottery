@@ -5,7 +5,7 @@ import android.test.ApplicationTestCase;
 
 import com.bob.lottery.bean.User;
 import com.bob.lottery.engine.UserEngineImpl;
-import com.bob.lottery.net.protocol.Message;
+import com.bob.lottery.protocol.Message;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>

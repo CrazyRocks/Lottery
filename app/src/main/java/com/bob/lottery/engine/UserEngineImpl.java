@@ -2,18 +2,17 @@ package com.bob.lottery.engine;
 
 import android.util.Xml;
 
-import com.bob.lottery.ConstantValue;
+import com.bob.lottery.util.ConstantValue;
 import com.bob.lottery.bean.User;
 import com.bob.lottery.net.HttpClientUtil;
-import com.bob.lottery.net.protocol.Message;
-import com.bob.lottery.net.protocol.element.UserLoginElement;
+import com.bob.lottery.protocol.Message;
+import com.bob.lottery.element.UserLoginElement;
 import com.bob.lottery.util.DES;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 
 /**
@@ -21,10 +20,70 @@ import java.io.StringReader;
  */
 
 //用户登录
-public class UserEngineImpl {
+public class UserEngineImpl extends BaseEngine implements UserEngine{
 
     //用户登录
+    @Override
     public Message login(User user) {
+        //1.获取登录用的xml
+        //创建登录用的Element
+        UserLoginElement element = new UserLoginElement();
+        //设置用户数据
+        element.getActpassword().setTagValue(user.getPassword());
+        Message message = new Message();
+        message.getHeader().getUsername().setTagValue(user.getUsername());
+        String xml = message.getXml(element);
+        System.out.println(xml);
+
+        //如果第三步比对通过result
+        Message result=getResult(xml);
+
+        if (result!=null) {
+            //4.请求结果处理，解析明文
+            XmlPullParser parser = Xml.newPullParser();
+            try {
+                DES des = new DES();
+                String body = "<body>" + des.authcode(result.getBody().getServiceBodyInsideDESInfo(),
+                        "ENCODE", ConstantValue.DES_PASSWORD) + "</body>";
+                parser.setInput(new StringReader(body));
+
+                int eventType = parser.getEventType();
+                String name;
+
+                while (eventType != XmlPullParser.END_DOCUMENT) {
+                    switch (eventType) {
+                        case XmlPullParser.START_TAG:
+                            name = parser.getName();
+                            if ("errorcode".equals(name)) {
+                                result.getBody().getOelement().setErrorcode(parser.nextText());
+                                System.out.println(name);
+                            }
+                            if ("errormsg".equals(name)) {
+                                result.getBody().getOelement().setErrormsg(parser.nextText());
+                                System.out.println(name);
+
+                            }
+                            break;
+                    }
+                    eventType = parser.next();
+                }
+
+                System.out.println(result.getBody().getOelement().getErrorcode());
+                System.out.println(result.getBody().getOelement().getErrormsg());
+
+                return result;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return null;
+    }
+
+
+    //用户登录
+    public Message loginOne(User user) {
         //1.获取登录用的xml
         //创建登录用的Element
         UserLoginElement element = new UserLoginElement();
@@ -72,6 +131,9 @@ public class UserEngineImpl {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
+
 
             //原数据还原
             //明文body

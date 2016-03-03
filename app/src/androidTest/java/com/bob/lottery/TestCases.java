@@ -5,8 +5,8 @@ import android.util.Log;
 
 import com.bob.lottery.bean.User;
 import com.bob.lottery.engine.UserEngineImpl;
-import com.bob.lottery.net.protocol.Message;
-import com.bob.lottery.net.protocol.element.CurrentIssueElement;
+import com.bob.lottery.protocol.Message;
+import com.bob.lottery.element.CurrentIssueElement;
 
 /**
  * Created by Administrator on 2016/1/31.

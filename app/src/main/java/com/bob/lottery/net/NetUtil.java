@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
-import com.bob.lottery.GlobalParams;
+import com.bob.lottery.util.GlobalParams;
 
 /**
  * Created by Administrator on 2016/1/30.
