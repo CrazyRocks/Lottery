@@ -63,6 +63,7 @@ public class Message {
             //设置输出
             serializer.setOutput(writer);
             serializer.startDocument(ConstantValue.ENCONDING, null);
+            //调用序列化
             this.serializerMessage(serializer);
             serializer.endDocument();
             return writer.toString();

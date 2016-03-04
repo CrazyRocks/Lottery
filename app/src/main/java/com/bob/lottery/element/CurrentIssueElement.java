@@ -13,6 +13,7 @@ public class CurrentIssueElement extends Element{
     private Leaf lotteryid=new Leaf("lotteryid");
     private Leaf issues=new Leaf("issues","1");
 
+    //处理回复
     private String issue;
     private String lasttime;
 
@@ -38,7 +39,6 @@ public class CurrentIssueElement extends Element{
     @Override
     public void serializerElement(XmlSerializer serializer) {
         try{
-
             serializer.startTag(null,"element");
             lotteryid.serializerLeaf(serializer);
             issues.serializerLeaf(serializer);

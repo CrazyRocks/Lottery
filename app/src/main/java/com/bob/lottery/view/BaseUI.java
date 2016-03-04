@@ -1,11 +1,15 @@
 package com.bob.lottery.view;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.bob.lottery.R;
+import com.bob.lottery.net.NetUtil;
+import com.bob.lottery.protocol.Message;
+import com.bob.lottery.util.PromptManager;
 
 //所有界面的基类，界面通用化
 public abstract class BaseUI implements View.OnClickListener{
@@ -49,6 +53,22 @@ public abstract class BaseUI implements View.OnClickListener{
 
 	public View findViewById(int id){
 		return showInMiddle.findViewById(id);
+	}
+
+
+	//访问网络的工具, //AsyncTask内部封装好了线程池，CORE_SIZE=5
+	public abstract class MyHttpTask<Params> extends AsyncTask<Params,Void, Message>{
+
+		//类似于Thread.start方法
+		//由于final无法Override,省略网络判断
+		public final AsyncTask<Params,Void, Message> executeProxy(Params... params){
+			if (NetUtil.checkNet(context)) {
+				return super.execute(params);
+			} else {
+				PromptManager.showNoNetWork(context);
+			}
+			return null;
+		}
 	}
 	
 }

@@ -1,12 +1,16 @@
 package com.bob.lottery.net;
 
 import com.bob.lottery.util.ConstantValue;
+import com.bob.lottery.util.GlobalParams;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
@@ -25,13 +29,13 @@ public class HttpClientUtil {
 		client.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 5000);
 		client.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 5000);
 
-//		// 判断是否需要设置代理信息
-//		if (StringUtils.isNotBlank(GlobalParams.PROXY)) {
-//			// 设置代理信息
-//			HttpHost host = new HttpHost(GlobalParams.PROXY, GlobalParams.PORT);
-//			client.getParams()
-//					.setParameter(ConnRoutePNames.DEFAULT_PROXY, host);
-//		}
+		// 判断是否需要设置代理信息
+		if (StringUtils.isNotBlank(GlobalParams.PROXY)) {
+			// 设置代理信息
+			HttpHost host = new HttpHost(GlobalParams.PROXY, GlobalParams.PORT);
+			client.getParams()
+					.setParameter(ConnRoutePNames.DEFAULT_PROXY, host);
+		}
 	}
 
 	/**

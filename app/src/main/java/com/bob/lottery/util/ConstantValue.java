@@ -32,6 +32,10 @@ public interface ConstantValue {
     int VIEWSHOPPING=20;
     //追期和信投的设置界面
     int VIEW_PREBET=25;
+    //双色球的标识
+    int SSQ=118;
+    //服务器返回成功
+    String SUCCESS="0";
 
 
 }
