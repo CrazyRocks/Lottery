@@ -10,10 +10,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bob.lottery.R;
+import com.bob.lottery.util.ConstantValue;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Observable;
+import java.util.Observer;
 
 
 //控制底部导航容器
-public class BottomManager {
+public class BottomManager implements Observer{
 	protected static final String TAG = "BottomManager";
 	/******************* 第一步：管理对象的创建(单例模式) ***************************************************/
 	// 创建一个静态实例
@@ -131,6 +137,24 @@ public class BottomManager {
 	public void changeGameBottomNotice(String notice) {
 		playBottomNotice.setText(notice);
 	}
-	/*********************************************************************************************/
+
+
+
+	@Override
+	public void update(Observable observable, Object data) {
+		//不空，是数字
+		if (data!=null && StringUtils.isNumeric(data.toString())){
+			int id=Integer.parseInt(data.toString());
+			switch (id){
+				case ConstantValue.VIEW_FISRT:
+				case ConstantValue.VIEW_HALL:
+					showCommonBottom();
+					break;
+				case ConstantValue.VIEW_SECOND:
+					showGameBottom();
+					break;
+			}
+		}
+	}
 
 }

@@ -7,13 +7,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bob.lottery.R;
+import com.bob.lottery.util.ConstantValue;
+import com.bob.lottery.view.SecondUI;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.conn.BasicEofSensorWatcher;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by Administrator on 2016/3/3.
  */
 
 //管理标题容器
-public class TitleManager {
+public class TitleManager implements Observer{
     //拿到容器
     private RelativeLayout commonContainer;
     private RelativeLayout loginContainer;
@@ -78,8 +86,8 @@ public class TitleManager {
             public void onClick(View v) {
                 System.out.println("login");
 
-//				SecondUI secondUI = new SecondUI(MiddleManager.getInstance().getContext());
-               // MiddleManager.getInstance().changeUI(SecondUI.class);//changeUI需要修改，不能传递对象，但是明确目标
+				//SecondUI secondUI = new SecondUI(MiddleManager.getInstance().getContext());
+                MiddleManager.getInstance().changeUI(SecondUI.class);//changeUI需要修改，不能传递对象，但是明确目标
             }
         });
 
@@ -114,5 +122,22 @@ public class TitleManager {
 
     public void changeTitle(String title) {
         titleContent.setText(title);
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        //不空，是数字
+        if (data!=null && StringUtils.isNumeric(data.toString())){
+            int id=Integer.parseInt(data.toString());
+                switch (id){
+                    case ConstantValue.VIEW_FISRT:
+                    case ConstantValue.VIEW_HALL:
+                        showUnLoginTitle();
+                        break;
+                    case ConstantValue.VIEW_SECOND:
+                        showCommonTitle();
+                        break;
+                }
+        }
     }
 }
