@@ -29,13 +29,16 @@ public interface ConstantValue {
     //双色球选号界面
     int VIEW_SSQ=15;
     //购物车
-    int VIEWSHOPPING=20;
+    int VIEW_SHOPPING=20;
     //追期和信投的设置界面
     int VIEW_PREBET=25;
+    //用户登录
+    int VIEW_LOGIN = 30;
     //双色球的标识
     int SSQ=118;
     //服务器返回成功
     String SUCCESS="0";
+
 
 
 }

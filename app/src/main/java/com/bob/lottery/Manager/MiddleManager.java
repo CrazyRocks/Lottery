@@ -41,6 +41,14 @@ public class MiddleManager extends Observable{
     private BaseUI currentUI;//当前展示
     private LinkedList<String> HISTORY=new LinkedList<>();//用户操作历史纪录
 
+    public BaseUI getCurrentUI() {
+        return currentUI;
+    }
+
+    public void setCurrentUI(BaseUI currentUI) {
+        this.currentUI = currentUI;
+    }
+
     public void changeUI(Class<? extends BaseUI> targetClazz ,Bundle bundle){
         //判断当前正在展示的界面
         if (currentUI!=null && currentUI.getClass()==targetClazz)
@@ -75,12 +83,19 @@ public class MiddleManager extends Observable{
         //切换核心
         middleContainer.removeAllViews();
         //FadeUtil.fadeOut(firstUIChild, 2000);
-        View child = targetUI.getChild();
+        View child = null;
+        if (targetUI != null) {
+            child = targetUI.getChild();
+        }
         middleContainer.addView(child);
-        child.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.ia_view_change));
+        if (child != null) {
+            child.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.ia_view_change));
+        }
         // FadeUtil.fadeIn(child, 2000, 1000);
         //加载完之后
-        targetUI.onResume();
+        if (targetUI != null) {
+            targetUI.onResume();
+        }
         currentUI=targetUI;
 
         //将当前显示的界面保存到栈顶
@@ -187,16 +202,24 @@ public class MiddleManager extends Observable{
                 String key=HISTORY.getFirst();
                 //拿到对象
                 BaseUI targetUI=VIEWCAHE.get(key);
+                currentUI.onPause();
                 //移除容器view
                 middleContainer.removeAllViews();
                 //重新添加，更新ui
                 middleContainer.addView(targetUI.getChild());
+                targetUI.onResume();
                 //设置当前展示的是谁
                 currentUI=targetUI;
+
+                changeTitleAndBottom();
                 return true;
             }
 
         }
         return false;
+    }
+
+    public void clear() {
+        HISTORY.clear();
     }
 }

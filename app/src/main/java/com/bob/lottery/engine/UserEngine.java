@@ -11,4 +11,10 @@ import com.bob.lottery.protocol.Message;
 public interface UserEngine {
     //用户登录
      Message login(User user);
+
+     //获取用户余额
+     Message getBalance(User param);
+
+     //追期与倍投
+     Message bet(User param);
 }

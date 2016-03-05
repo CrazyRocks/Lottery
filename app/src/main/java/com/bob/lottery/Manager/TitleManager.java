@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.bob.lottery.R;
 import com.bob.lottery.util.ConstantValue;
+import com.bob.lottery.util.GlobalParams;
 import com.bob.lottery.view.SecondUI;
 
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +60,7 @@ public class TitleManager implements Observer{
         help = (ImageView) activity.findViewById(R.id.ii_title_help);
         login = (ImageView) activity.findViewById(R.id.ii_title_login);
         titleContent=(TextView)activity.findViewById(R.id.ii_title_content);
+        userInfo=(TextView)activity.findViewById(R.id.ii_top_user_info);
 
         setListener();
     }
@@ -132,12 +134,23 @@ public class TitleManager implements Observer{
             int id=Integer.parseInt(data.toString());
                 switch (id){
                     case ConstantValue.VIEW_FISRT:
-                    case ConstantValue.VIEW_HALL:
                         showUnLoginTitle();
                         break;
                     case ConstantValue.VIEW_SECOND:
                     case ConstantValue.VIEW_SSQ:
+                    case ConstantValue.VIEW_SHOPPING:
+                    case ConstantValue.VIEW_LOGIN:
+                    case ConstantValue.VIEW_PREBET:
                         showCommonTitle();
+                        break;
+                    case ConstantValue.VIEW_HALL:
+                        if (GlobalParams.isLogin){
+                            showLoginTitle();
+                            String info = "用户名：" + GlobalParams.USERNAME + "\r\n" + "余额:" + GlobalParams.MONEY;
+                            userInfo.setText(info);
+                        }else {
+                            showUnLoginTitle();
+                        }
                         break;
                 }
         }
