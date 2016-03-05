@@ -2,6 +2,7 @@ package com.bob.lottery.view;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ public abstract class BaseUI implements View.OnClickListener{
 	protected Context context;
 	//显示到中间容器
 	protected ViewGroup showInMiddle;
+	public Bundle bundle;
 
 	public BaseUI(Context context) {
 		this.context = context;
@@ -53,6 +55,16 @@ public abstract class BaseUI implements View.OnClickListener{
 
 	public View findViewById(int id){
 		return showInMiddle.findViewById(id);
+	}
+
+	//出去
+	public  void onPause(){};
+	//进入
+	public  void onResume(){};
+
+	//传数据
+	public void setBundle(Bundle bundle) {
+		this.bundle=bundle;
 	}
 
 

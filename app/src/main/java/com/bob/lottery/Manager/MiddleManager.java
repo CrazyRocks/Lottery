@@ -1,6 +1,7 @@
 package com.bob.lottery.Manager;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
@@ -40,6 +41,53 @@ public class MiddleManager extends Observable{
     private BaseUI currentUI;//当前展示
     private LinkedList<String> HISTORY=new LinkedList<>();//用户操作历史纪录
 
+    public void changeUI(Class<? extends BaseUI> targetClazz ,Bundle bundle){
+        //判断当前正在展示的界面
+        if (currentUI!=null && currentUI.getClass()==targetClazz)
+        {
+            return;
+        }
+
+        BaseUI targetUI=null;
+        String key=targetClazz.getSimpleName();
+        //一旦创建过，重用
+        if (VIEWCAHE.containsKey(key)){
+            targetUI=VIEWCAHE.get(key);
+        }else {
+            try {
+                Constructor<? extends BaseUI> constructor = targetClazz.getConstructor(Context.class);
+                targetUI=constructor.newInstance(getContext());
+                VIEWCAHE.put(key,targetUI);
+            } catch (Exception e) {
+                throw new RuntimeException("构造问题");
+            }
+        }
+
+        if (targetUI!=null){
+            targetUI.setBundle(bundle);
+        }
+
+        //清理之前
+        if (currentUI!=null){
+            currentUI.onPause();
+        }
+
+        //切换核心
+        middleContainer.removeAllViews();
+        //FadeUtil.fadeOut(firstUIChild, 2000);
+        View child = targetUI.getChild();
+        middleContainer.addView(child);
+        child.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.ia_view_change));
+        // FadeUtil.fadeIn(child, 2000, 1000);
+        //加载完之后
+        targetUI.onResume();
+        currentUI=targetUI;
+
+        //将当前显示的界面保存到栈顶
+        HISTORY.addFirst(key);
+        //当前容器切换成功，处理另外两个容器的变化
+        changeTitleAndBottom();
+    }
 
     //处理反复点击对象的重用
     public void changeUI(Class<? extends BaseUI> targetClazz){
@@ -63,6 +111,12 @@ public class MiddleManager extends Observable{
                 throw new RuntimeException("构造问题");
             }
         }
+
+        //清理之前
+        if (currentUI!=null){
+            currentUI.onPause();
+        }
+
         //切换核心
         middleContainer.removeAllViews();
         //FadeUtil.fadeOut(firstUIChild, 2000);
@@ -70,6 +124,8 @@ public class MiddleManager extends Observable{
         middleContainer.addView(child);
         child.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.ia_view_change));
         // FadeUtil.fadeIn(child, 2000, 1000);
+        //加载完之后
+        targetUI.onResume();
         currentUI=targetUI;
 
         //将当前显示的界面保存到栈顶

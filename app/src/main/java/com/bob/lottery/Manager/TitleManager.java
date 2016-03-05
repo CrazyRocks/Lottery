@@ -58,6 +58,7 @@ public class TitleManager implements Observer{
         goback = (ImageView) activity.findViewById(R.id.ii_title_goback);
         help = (ImageView) activity.findViewById(R.id.ii_title_help);
         login = (ImageView) activity.findViewById(R.id.ii_title_login);
+        titleContent=(TextView)activity.findViewById(R.id.ii_title_content);
 
         setListener();
     }
@@ -135,6 +136,7 @@ public class TitleManager implements Observer{
                         showUnLoginTitle();
                         break;
                     case ConstantValue.VIEW_SECOND:
+                    case ConstantValue.VIEW_SSQ:
                         showCommonTitle();
                         break;
                 }
